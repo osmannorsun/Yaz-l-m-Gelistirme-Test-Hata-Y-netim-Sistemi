@@ -1,0 +1,8 @@
+{% extends "base.html" %}{% block body %}
+<form method="post" class="card narrow"><h2>Yeni Task</h2>
+<label>Başlık<input name="title" required></label>
+<label>Açıklama<textarea name="description" rows="5"></textarea></label>
+<label>Öncelik<select name="priority"><option>Low</option><option selected>Medium</option><option>High</option><option>Critical</option></select></label>
+<label>Developer<select name="assignee_id"><option value="">-- Seçiniz --</option>
+{% for d in devs %}<option value="{{ d.id }}">{{ d.full_name }}</option>{% endfor %}</select></label>
+<button class="btn">Oluştur</button></form>{% endblock %}

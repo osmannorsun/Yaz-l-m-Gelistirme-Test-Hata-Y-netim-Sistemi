@@ -1,0 +1,24 @@
+{% extends "base.html" %}{% block body %}
+<h2>Kalite Raporları</h2>
+<div class="kpis">
+  <div class="card kpi"><b>{{ kpi.total }}</b>Toplam Task</div>
+  <div class="card kpi"><b>{{ kpi.live }}</b>Canlıdaki</div>
+  <div class="card kpi"><b>{{ kpi.all_defects }}</b>Toplam Defect</div>
+  <div class="card kpi"><b>{{ kpi.open_defects }}</b>Açık Defect</div>
+  <div class="card kpi"><b>%{{ kpi.first_pass }}</b>İlk Seferde Geçme</div>
+  <div class="card kpi"><b>%{{ kpi.approval }}</b>QA Onay Oranı</div>
+  <div class="card kpi"><b>{{ kpi.avg_fix if kpi.avg_fix is not none else '—' }}</b>Ort. Düzeltme (saat)</div>
+</div>
+<div class="grid2">
+<div class="card"><h3>Durumlara Göre Task</h3>
+{% set mx = (by_status|map(attribute='c')|max) if by_status else 1 %}
+{% for r in by_status %}<div class="bar"><span>{{ r.status }}</span><i style="width:{{ 100*r.c/mx }}%"></i><em>{{ r.c }}</em></div>{% endfor %}</div>
+<div class="card"><h3>Önem Derecesine Göre Defect</h3>
+{% set mx2 = (by_sev|map(attribute='c')|max) if by_sev else 1 %}
+{% for r in by_sev %}<div class="bar"><span>{{ r.severity }}</span><i style="width:{{ 100*r.c/mx2 }}%"></i><em>{{ r.c }}</em></div>
+{% else %}<p class="muted">Veri yok.</p>{% endfor %}</div>
+</div>
+<div class="card"><h3>Developer Bazında Kalite</h3>
+<table><tr><th>Developer</th><th>Task</th><th>Defect</th><th>Task başına defect</th></tr>
+{% for r in by_dev %}<tr><td>{{ r.full_name }}</td><td>{{ r.tasks }}</td><td>{{ r.defects }}</td><td>{{ r.per_task }}</td></tr>{% endfor %}</table></div>
+{% endblock %}

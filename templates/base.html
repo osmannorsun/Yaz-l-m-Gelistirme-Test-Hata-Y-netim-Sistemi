@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="tr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TaskFlow</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head>
+<body>
+{% if g.user %}
+<nav><b class="logo">TaskFlow</b>
+  <a href="{{ url_for('board') }}">Pano</a>
+  <a href="{{ url_for('board', mine=1) }}">Task'larım</a>
+  <a href="{{ url_for('reports') }}">Raporlar</a>
+  {% if g.user.role == 'admin' %}<a class="btn" href="{{ url_for('new_task') }}">+ Yeni Task</a>{% endif %}
+  <span class="sp"></span><span>{{ g.user.full_name }} <small>({{ g.user.role }})</small></span>
+  <a href="{{ url_for('logout') }}">Çıkış</a></nav>
+{% endif %}
+<main>
+{% for m in get_flashed_messages() %}<div class="flash">{{ m }}</div>{% endfor %}
+{% block body %}{% endblock %}
+</main></body></html>

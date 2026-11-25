@@ -1,0 +1,37 @@
+<!doctype html><meta charset="utf-8"><style>
+body{font:14px Segoe UI,system-ui,sans-serif;margin:0;padding:24px;background:#fff;color:#172b4d;width:1300px}
+h1{font-size:20px;margin:0 0 4px}h2{font-size:15px;margin:22px 0 8px}small{color:#6b778c}
+.layer{border:2px solid #0052cc;border-radius:8px;padding:10px 14px;margin:8px 0;background:#f4f8ff}
+.layer b{color:#0052cc}.row{display:flex;gap:16px}.tbl{border:1px solid #97a0af;border-radius:6px;min-width:200px;background:#fff}
+.tbl h4{margin:0;padding:6px 10px;background:#172b4d;color:#fff;border-radius:5px 5px 0 0;font-size:13px}
+.tbl div{padding:2px 10px;font-size:12px;font-family:Consolas,monospace}
+table.t{border-collapse:collapse;font-size:12px}table.t td,table.t th{border:1px solid #c1c7d0;padding:4px 8px;text-align:left}
+th{background:#ebecf0}</style>
+<h1>TaskFlow – Mimari ve Veri Modeli</h1><small>Kaynak: app.py, schema.sql (Issue #6)</small>
+<h2>1. Katmanlı mimari</h2>
+<div class="layer"><b>Sunum Katmanı</b> – Jinja2 şablonları: login.html · board.html · task.html · new_task.html · reports.html (base.html + static/style.css)</div>
+<div style="text-align:center">▼</div>
+<div class="layer"><b>İş Mantığı Katmanı</b> – Flask route'ları (app.py): Kimlik doğrulama (before_request, @roles) · İş akışı (TRANSITIONS, allowed_moves, move) · Defect yönetimi (add_defect) · Raporlama (reports)</div>
+<div style="text-align:center">▼</div>
+<div class="layer"><b>Veri Erişim Katmanı</b> – sqlite3 (db(), init_db(), PRAGMA foreign_keys=ON)</div>
+<div style="text-align:center">▼</div>
+<div class="layer"><b>Veritabanı</b> – SQLite (jira-demo.db, schema.sql)</div>
+<h2>2. Veri modeli (tablolar)</h2>
+<div class="row">
+<div class="tbl"><h4>users</h4><div>id PK</div><div>username UNIQUE</div><div>full_name</div><div>password_hash</div><div>role (admin|developer|qa)</div></div>
+<div class="tbl"><h4>tasks</h4><div>id PK</div><div>title, description</div><div>priority, status</div><div>assignee_id → users.id</div><div>creator_id → users.id</div><div>created_at, updated_at, live_at</div></div>
+<div class="tbl"><h4>defects</h4><div>id PK</div><div>task_id → tasks.id</div><div>title, description</div><div>severity</div><div>status (Open|Fixed|Closed)</div><div>reporter_id → users.id</div><div>created_at, fixed_at</div></div>
+<div class="tbl"><h4>history</h4><div>id PK</div><div>task_id → tasks.id</div><div>user_id → users.id</div><div>from_status, to_status</div><div>note, created_at</div></div>
+</div>
+<small>İlişkiler: users 1—N tasks (atanan/oluşturan) · tasks 1—N defects · tasks 1—N history · users 1—N defects (raporlayan) · users 1—N history</small>
+<h2>3. Durum geçiş tablosu (app.py → TRANSITIONS)</h2>
+<table class="t"><tr><th>Mevcut durum</th><th>Hedef durum</th><th>İzinli rol</th></tr>
+<tr><td>Development</td><td>Testing</td><td>developer (atanan kişi)</td></tr>
+<tr><td>Testing</td><td>QA Approved / Rejected</td><td>qa</td></tr>
+<tr><td>Testing, Retest</td><td>Defect (hata formu ile)</td><td>qa</td></tr>
+<tr><td>Defect</td><td>Fix</td><td>developer (atanan kişi)</td></tr>
+<tr><td>Fix</td><td>Retest</td><td>developer (atanan kişi)</td></tr>
+<tr><td>Retest</td><td>QA Approved / Rejected</td><td>qa</td></tr>
+<tr><td>QA Approved</td><td>Live</td><td>admin</td></tr>
+<tr><td>Rejected</td><td>Development</td><td>admin</td></tr></table>
+<small>admin tüm geçerli geçişleri yapabilir; tabloda olmayan geçişler 403 ile reddedilir.</small>

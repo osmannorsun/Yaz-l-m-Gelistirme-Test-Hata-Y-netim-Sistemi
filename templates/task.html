@@ -1,0 +1,36 @@
+{% extends "base.html" %}{% block body %}
+<div class="grid">
+<div>
+  <div class="card">
+    <h2>#{{ t.id }} {{ t.title }}</h2>
+    <p><span class="tag s-{{ t.status|replace(' ','') }}">{{ t.status }}</span>
+       <span class="tag p-{{ t.priority }}">{{ t.priority }}</span>
+       Developer: <b>{{ t.assignee or 'Atanmamış' }}</b></p>
+    <p>{{ t.description or '—' }}</p>
+    {% if moves %}<h4>İşlemler</h4>
+    <form method="post" action="{{ url_for('move', tid=t.id) }}" class="row">
+      <input name="note" placeholder="Not (opsiyonel)">
+      {% for m in moves %}<button class="btn {{ 'danger' if m=='Rejected' }}" name="target" value="{{ m }}">→ {{ m }}</button>{% endfor %}
+    </form>{% endif %}
+    {% if g.user.role == 'admin' %}
+    <form method="post" action="{{ url_for('assign', tid=t.id) }}" class="row"><select name="assignee_id">
+      <option value="">Atanmamış</option>{% for d in devs %}<option value="{{ d.id }}" {{ 'selected' if d.id==t.assignee_id }}>{{ d.full_name }}</option>{% endfor %}
+    </select><button class="btn ghost">Ata</button></form>{% endif %}
+  </div>
+
+  {% if can_defect %}
+  <form method="post" action="{{ url_for('add_defect', tid=t.id) }}" class="card"><h3>Defect Aç</h3>
+    <label>Başlık<input name="title" required></label>
+    <label>Açıklama / adımlar<textarea name="description" rows="3"></textarea></label>
+    <label>Önem<select name="severity"><option>Minor</option><option selected>Major</option><option>Critical</option></select></label>
+    <button class="btn danger">Defect olarak bildir</button></form>{% endif %}
+
+  <div class="card"><h3>Defect'ler ({{ defects|length }})</h3>
+  {% for d in defects %}<div class="item"><b>{{ d.title }}</b> <span class="tag sev-{{ d.severity }}">{{ d.severity }}</span>
+    <span class="tag">{{ d.status }}</span><br><small>{{ d.reporter }} · {{ d.created_at }}</small><p>{{ d.description }}</p></div>
+  {% else %}<p class="muted">Defect yok.</p>{% endfor %}</div>
+</div>
+<aside class="card"><h3>Geçmiş</h3>
+{% for h in hist %}<div class="item"><small>{{ h.created_at }} · {{ h.full_name }}</small><br>
+  {% if h.to_status %}{{ h.from_status or '·' }} → <b>{{ h.to_status }}</b>{% endif %} {{ h.note }}</div>{% endfor %}
+</aside></div>{% endblock %}

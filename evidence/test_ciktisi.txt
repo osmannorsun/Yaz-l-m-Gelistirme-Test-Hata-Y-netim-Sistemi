@@ -1,0 +1,46 @@
+Komut: python -m pytest -v --cov=app --cov-report=term-missing
+Tarih: 25.11.2026 22:38
+
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.2.0, pluggy-1.7.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /home/claude/proj/Yazılım Geliştirme, Test ve Hata Yönetim Sistemi
+plugins: platformdirs-4.13.0, cov-7.1.0
+collecting ... collected 26 items
+
+tests/test_auth.py::test_login_page_opens PASSED                         [  3%]
+tests/test_auth.py::test_unauthenticated_redirects_to_login PASSED       [  7%]
+tests/test_auth.py::test_login_success PASSED                            [ 11%]
+tests/test_auth.py::test_login_wrong_password PASSED                     [ 15%]
+tests/test_auth.py::test_logout_blocks_access PASSED                     [ 19%]
+tests/test_auth.py::test_developer_cannot_create_task PASSED             [ 23%]
+tests/test_auth.py::test_qa_cannot_create_task PASSED                    [ 26%]
+tests/test_auth.py::test_developer_cannot_report_defect PASSED           [ 30%]
+tests/test_ui_reports.py::test_board_page_opens_with_all_columns PASSED  [ 34%]
+tests/test_ui_reports.py::test_four_main_screens_open PASSED             [ 38%]
+tests/test_ui_reports.py::test_unknown_task_returns_404 PASSED           [ 42%]
+tests/test_ui_reports.py::test_reports_open_on_empty_db PASSED           [ 46%]
+tests/test_ui_reports.py::test_reports_use_real_data PASSED              [ 50%]
+tests/test_ui_reports.py::test_viewport_meta_for_mobile PASSED           [ 53%]
+tests/test_ui_reports.py::test_my_tasks_filter PASSED                    [ 57%]
+tests/test_workflow.py::test_task_saved_to_db_with_assignee PASSED       [ 61%]
+tests/test_workflow.py::test_assignee_can_be_changed PASSED              [ 65%]
+tests/test_workflow.py::test_invalid_transition_rejected PASSED          [ 69%]
+tests/test_workflow.py::test_transition_logged_in_history PASSED         [ 73%]
+tests/test_workflow.py::test_other_developer_cannot_move_task PASSED     [ 76%]
+tests/test_workflow.py::test_developer_cannot_approve PASSED             [ 80%]
+tests/test_workflow.py::test_defect_changes_status_and_close_on_approval PASSED [ 84%]
+tests/test_workflow.py::test_defect_not_allowed_in_wrong_status PASSED   [ 88%]
+tests/test_workflow.py::test_full_flow_to_live PASSED                    [ 92%]
+tests/test_workflow.py::test_rejected_returns_to_development PASSED      [ 96%]
+tests/test_workflow.py::test_transition_table_is_consistent PASSED       [100%]
+
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.12.3-final-0 ________________
+
+Name     Stmts   Miss  Cover   Missing
+--------------------------------------
+app.py     145      2    99%   193-194
+--------------------------------------
+TOTAL      145      2    99%
+============================= 26 passed in 15.88s ==============================

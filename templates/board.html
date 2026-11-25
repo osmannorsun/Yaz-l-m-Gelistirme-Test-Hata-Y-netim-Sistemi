@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% block body %}
+<h2>Pano</h2>
+<div class="board">
+{% for s, items in cols.items() %}
+<section class="col"><h3><span class="dot s-{{ s|replace(' ','') }}"></span>{{ s }} <small>{{ items|length }}</small></h3>
+  {% for t in items %}
+  <a class="ticket" href="{{ url_for('task', tid=t.id) }}">
+    <b>#{{ t.id }} {{ t.title }}</b>
+    <div><span class="tag p-{{ t.priority }}">{{ t.priority }}</span> <small>{{ t.assignee or 'Atanmamış' }}</small></div>
+  </a>{% endfor %}
+</section>{% endfor %}
+</div>{% endblock %}

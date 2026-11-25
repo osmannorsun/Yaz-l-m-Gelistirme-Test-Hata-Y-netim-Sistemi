@@ -1,0 +1,17 @@
+# Veritabanı dosyaları (Issue #2 kriteri: DB repoda olmamalı)
+*.db
+*.sqlite3
+demo.db
+jira-demo.db
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+htmlcov/
+venv/
+.venv/
+
+# Editör
+.vscode/
