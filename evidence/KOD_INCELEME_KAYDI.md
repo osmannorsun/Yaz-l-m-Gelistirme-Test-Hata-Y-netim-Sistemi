@@ -3,7 +3,6 @@
 **Kapsam:** app.py, schema.sql, templates/*, static/style.css, tests/*
 **Standart:** Coding Standards kontrol listesi (PEP 8 + proje kuralları)
 **Araçlar:** `flake8 --max-line-length=130`, `pytest --cov`, manuel okuma
-**Reviewer:** ______________ (doldur)  **Tarih:** ____/____/2026
 
 ## 1. Kontrol listesi
 
